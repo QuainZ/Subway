@@ -1,5 +1,6 @@
 package com.zz.graph;
 import java.util.ArrayList;
+//图类
 
 /*
  * 编辑人：诸思文
@@ -125,26 +126,3 @@ public class Graph {
     	return result;
     }
 }
-
-//顶点类
-class Vertex {  
-	int id;//标识ID
-    char name;//车站名字
-    char subline_name;//多个用','号隔开
-    boolean ischange;// 标识是否为换乘点
-    boolean isopen;// 标识是否开通
-    
-    double X;//在地铁图中的X坐标
-    double Y;//在地铁图中的Y坐标
-  
-    public Vertex(int id, char name, char subline_name, boolean ischange, boolean isopen,
-    		double X, double Y,boolean isvisited) {  
-        this.id = id; 
-        this.name = name;
-        this.subline_name = subline_name;
-        this.ischange = ischange; 
-        this.isopen = isopen;
-        this.X = X;
-        this.Y = Y; 
-    }  
-} 
