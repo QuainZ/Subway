@@ -92,10 +92,45 @@ public class MainFrame extends JFrame {
 				JOptionPane.showMessageDialog(null, "起始点地铁站与終点地铁站相同", "警告", JOptionPane.ERROR_MESSAGE);
 			}
 			ArrayList<Vertex> temp = g.getClosestPath(n1 ,n2);
-			jt.setText("");
+			int k = temp.size()-1;
+			jt.setText("需经历"+ k +"站\r\n");
 			for (int i = 0; i < temp.size(); i++)
 			{
-				jt.append(temp.get(i).getname()+"\r\n");
+				jt.append(temp.get(i).getname());
+				if (i > 1 && i < temp.size() - 1) {
+					Integer flag1 = new Integer(0);
+					Integer flag2 = new Integer(0);
+					ArrayList<Integer> sbl1 = temp.get(i-1).getsubwayline_id();
+					ArrayList<Integer> sbl2 = temp.get(i).getsubwayline_id();
+					ArrayList<Integer> sbl3 = temp.get(i+1).getsubwayline_id();
+					a:for (int j = 0; j < sbl1.size(); j++) {
+						for (int l = 0; l < sbl2.size(); l++) {
+							if (sbl1.get(j).equals(sbl2.get(l))) {
+								flag1 = sbl2.get(l);
+								break a;
+							}
+						}
+					}
+					b:for (int j = 0; j < sbl2.size(); j++) {
+						for (int l = 0; l < sbl3.size(); l++) {
+							if (sbl2.get(j).equals(sbl3.get(l))) {
+								flag2 = sbl3.get(l);
+								break b;
+							}
+						}
+					}
+					if( !flag1.equals(flag2) ) {
+						int num = flag2.intValue();  
+						for (int j = 0; j < sl.size(); j++)
+						{
+							if(sl.get(j).getid() == num) {
+								jt.append("  换乘"+sl.get(j).getname());
+
+							}
+						}
+					}
+				}
+				jt.append("\r\n");
 			}
 		}
 	}
@@ -223,7 +258,7 @@ class DrawPanel extends JPanel {
             	}
             }
         } 
-		Font font = new  Font("宋体",Font.PLAIN,  11);
+		Font font = new  Font("宋体",Font.PLAIN,  12);
 		g2.setFont(font);
 		for(int i = 0; i < g1.getNumOfVertex(); i++) {
 			g2.setColor(Color.BLACK);

@@ -118,16 +118,15 @@ public class Graph {
     				minDis = distance[j];
     			}
     		}
-    	}
 
-    	s[u] = 1;
-    	for(j = 0; j < n; j++) {
-    		if(s[j] == 0 && edge[u][j] < MAX_VALUE && distance[u] + edge[u][j] < distance[j]) {
-    			distance[j] = distance[u] + edge[u][j];
-    			path[j] = u;
+    		s[u] = 1;
+    		for(j = 0; j < n; j++) {
+    			if(s[j] == 0 && edge[u][j] < MAX_VALUE && distance[u] + edge[u][j] < distance[j]) {
+    				distance[j] = distance[u] + edge[u][j];
+    				path[j] = u;
+    			}
     		}
     	}
-    	
     	i = v2;
     	result.add(0,getValueByIndex(i));
     	while(path[i] != -1) {
