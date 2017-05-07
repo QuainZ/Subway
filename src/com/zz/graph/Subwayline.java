@@ -12,9 +12,21 @@ public class Subwayline {
 	String name;//地铁路线路名字
 	String information;//地铁路线路信息
 	
-	public Subwayline( int id, String name, String information){
+	public Subwayline(int id, String name, String information) {
         this.id = id; 
         this.name = name;
         this.information = information;
 	}
+	
+    public int getid() {
+    	return id;
+    }
+    
+    public String getname() {
+    	return name;
+    }
+    
+    public String getinformation() {
+    	return information;
+    }
 }

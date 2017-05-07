@@ -13,17 +13,17 @@ import java.util.ArrayList;
 public class Graph {
 	public static final int MAX_VALUE = 2147483647;
 	
-	ArrayList<Vertex> vertex;// 顶点数组  
-    int[][] edge;// 邻接矩阵  
-    int numOfEdges;// 当前图中边的条数
+	private ArrayList<Vertex> vertex = new ArrayList<Vertex>();;// 顶点数组  
+	private int[][] edge;// 邻接矩阵  //顶点的实际编号是矩阵编号+1
+	private int numOfEdges;// 当前图中边的条数
     
     //初始化
     public Graph(int n) {
-        edge = new int[n][n];  
-        numOfEdges = 0;  
+        this.edge = new int[n][n];  
+        this.numOfEdges = 0;  
         for (int i = 0; i < n; i++) {  
             for (int j = 0; j < n; j++) {
-            	if(i == j) edge[i][j] = 0;
+            	if(i == j) this.edge[i][j] = 0;
             	else edge[i][j] =  MAX_VALUE;//MAX_VALUE表示无穷大
             }
         }  
@@ -39,9 +39,19 @@ public class Graph {
         return numOfEdges;
     }
 
-    //返回结点
+    //序号返回结点
     public Vertex getValueByIndex(int i) {
         return vertex.get(i);
+    }
+    
+    //节点名返回序号
+    public int getIndexByName(String name) {
+    	for( int i=0; i<vertex.size() ;i++) {
+    		if(vertex.get(i).getname().equals(name)) {
+    	        return i;
+    		}
+    	}
+		return -1;
     }
 
     //返回v1,v2的权值
@@ -56,7 +66,7 @@ public class Graph {
 
     //插入边
     public void insertEdge(int v1,int v2) {
-        edge[v1][v2]=1;
+        edge[v1][v2] = 1;
         numOfEdges++;
     }
 
@@ -110,18 +120,19 @@ public class Graph {
     		}
     	}
 
-    	if(minDis == MAX_VALUE) return null;
     	s[u] = 1;
     	for(j = 0; j < n; j++) {
-    		if(s[j] == 0 && edge[u][j] < MAX_VALUE && distance[u] + edge[u][j] < distance[j]){
+    		if(s[j] == 0 && edge[u][j] < MAX_VALUE && distance[u] + edge[u][j] < distance[j]) {
     			distance[j] = distance[u] + edge[u][j];
     			path[j] = u;
     		}
     	}
     	
     	i = v2;
+    	result.add(0,getValueByIndex(i));
     	while(path[i] != -1) {
     		result.add(0,getValueByIndex(path[i]));
+    		i = path[i];
     	}
     	return result;
     }

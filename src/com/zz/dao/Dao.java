@@ -11,32 +11,32 @@ import java.util.ArrayList;
  */
 
 public class Dao {
-	static Connection con;
-	static Statement sql;
-	static ResultSet res;
-	private ArrayList<Subwayline> s1;
-	public Connection getConnection() {
-		try {
-			if(con == null) {
-				//连接SQLite的JDBC
-				Class.forName("org.sqlite.JDBC");       
-				//建立一个数据库名subway.db的连接
-				Connection con = DriverManager.getConnection("jdbc:sqlite:db_subway.db");
-			}
-		}	
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		return con;
+	private ArrayList<Subwayline> s1;//地铁线路信息
+	private Graph g1;//地铁图
+	private ArrayList<Vertex> v1;//地铁站点信息
+	
+	public ArrayList<Subwayline> getSubwayline() {
+		return s1;
+	}
+	
+	public Graph getGraph() {
+		return g1;
 	}
 		
-	public ArrayList<Subwayline> getSubwayline(Connection con) {
-		s1 = null;
+	public Dao() {
 		try {
-			sql = con.createStatement();
+			//连接SQLite的JDBC
+			Class.forName("org.sqlite.JDBC");       
+			//建立一个数据库名subway.db的连接
+			Connection con = DriverManager.getConnection("jdbc:sqlite:db_subway.db");
+			Statement sql = con.createStatement();
+			
+			this.s1 = new ArrayList<Subwayline>();
+			this.v1 = new ArrayList<Vertex>();
+			
 			//执行是sql语句，返回结果集
-			res = sql.executeQuery("select * from tb_bj_subwaylines");
-			while (res.next()){
+			ResultSet res = sql.executeQuery("select * from tb_bj_subwaylines");
+			while (res.next()) {
 				int id = 0;
 				try {
 					id = Integer.valueOf(res.getString("num")).intValue();
@@ -47,17 +47,56 @@ public class Dao {
 				String name = res.getString("name");
 				String information = res.getString("station_name");				
 				Subwayline s = new Subwayline(id, name, information);
-				s1.add(s);
+				this.s1.add(s);
 			}
+			res = sql.executeQuery("select * from tb_bj_points");
+			while (res.next()) {
+				int id = 0;
+				int X = 0;
+				int Y = 0;
+				ArrayList<Integer> sid = new ArrayList<Integer>();
+				try {
+					id = Integer.valueOf(res.getString("ID")).intValue();
+					X = Integer.valueOf(res.getString("X")).intValue();
+					Y = Integer.valueOf(res.getString("Y")).intValue();
+					String str = res.getString("subwaylines_ID");
+			        String[] str1 = str.split(",");
+			        for (int i = 0; i < str1.length; i++) {
+			        	sid.add(Integer.valueOf(str1[i]));
+			        }
+				} 
+				catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+				String name = res.getString("name");
+				boolean ischange = res.getInt("ischange") > 0;
+				Vertex v = new Vertex(id, name, sid, ischange, X, Y);
+				v1.add(v);
+			}
+			this.g1 = new Graph(v1.size());
+			for (int i = 0; i < v1.size(); i++)
+			{
+				this.g1.insertVertex(v1.get(i));
+			}
+			res = sql.executeQuery("select * from tb_bj_edges");
+			while (res.next()) {
+				int id1 = 0;
+				int id2 = 0;
+				try {
+					id1 = Integer.valueOf(res.getString("frompoint_ID")).intValue();
+					id2 = Integer.valueOf(res.getString("topoint_ID")).intValue();
+				} 
+				catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+				this.g1.insertEdge(id1-1, id2-1);
+				this.g1.insertEdge(id2-1, id1-1);
+			}
+			con.close(); //结束数据库的连接 
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-		return s1;
-	}
-	
-	public Graph getgraph(Connection con) {
-		
 	}
 	
 	

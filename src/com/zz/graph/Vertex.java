@@ -24,5 +24,29 @@ public class Vertex {
         this.ischange = ischange; 
         this.X = X;
         this.Y = Y; 
-    }     
+    }   
+    
+    public int getid() {
+    	return X;
+    }
+    
+    public String getname() {
+    	return name;
+    }
+    
+    public ArrayList<Integer> getsubwayline_id() {
+    	return subwayline_id;
+    }
+    
+    public boolean getischange() {
+    	return ischange;
+    }
+    
+    public int getX() {
+    	return X;
+    }
+    
+    public int getY() {
+    	return Y;
+    }
 }
